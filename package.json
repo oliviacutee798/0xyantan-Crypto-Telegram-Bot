@@ -2,9 +2,9 @@
   "name": "Crypto Telegram Bot",
   "version": "1.0.0",
   "description": "A simple Crypto Bot that shows News and Prices! ",
-  "main": "bot.js",
+  "main": "server.js",
   "scripts": {
-    "start": "bot.js"
+    "start": "server.js"
   },
   "dependencies": {
     "axios": "^0.21.1",
