@@ -15,34 +15,32 @@ bot = Client("my_bot", api_id, api_hash, bot_token=bot_token)
 def start(client, message):
     client.send_message(chat_id=message.chat.id, text="Hi! I'm a cryptocurrency price bot @TheQuietBot. Use the /price command followed by the name of a cryptocurrency to get its current price.Made By @TheAnonxD")
 
-# Function to handle the /price command
+
 @bot.on_message(filters.command("price") & filters.text)
 def price(client, message):
-from the message
     coin = message.text.split()[1].lower()
 
-    # Get the price of the coin
     try:
-        # Make request to Coin Gecko API
-        url = f"https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids={coin}"
-        response = requests.get(url)
-        data = response.json()[0]
+        response = requests.get(f"https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids={coin}")
+        data = response.json()
+        price = data[0]["current_price"]
+        percent_change_24h = data[0]["price_change_percentage_24h"]
+        symbol = data[0]["symbol"].upper()
 
-        # Extract the price and percentage change data
-        price = data["current_price"]
-        percent_change_24h = data["price_change_percentage_24h"]
+        if percent_change_24h > 0:
+            color = "\U0001F7E2"
+        else:
+            color = "\U0001F534"
 
-        # Format the price and percentage change data as a string with red/green arrow emojis
-        percent_change_24h_formatted = f"{percent_change_24h:+,.2f}%\u2193" if percent_change_24h < 0 else f"{percent_change_24h:+,.2f}%\u2191"
-        message = f"<b>{data['name']} ({data['symbol'].upper()})</b>\n" \
-                  f"<a href='{data['image']}'>&#8205;</a>${price:,.2f}\n" \
-                  f"{percent_change_24h_formatted}"
+        percent_change_24h_formatted = f"{percent_change_24h:.2f}%"
 
-    except (KeyError, IndexError):
-        message = f"Sorry, {coin} is not a valid cryptocurrency."
+        message = f"{emojize(':money_with_wings:', use_aliases=True)} <b>{coin.upper()}</b> ({symbol})\n\nPrice: ${price:,.2f}\n24h: {percent_change_24h_formatted} {color} {emojize(':chart_with_upwards_trend:' if percent_change_24h > 0 else ':chart_with_downwards_trend:')}"
+        client.send_message(chat_id=message.chat.id, text=message, parse_mode="HTML", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(f"{percent_change_24h_formatted} {color} {emojize(':chart_with_upwards_trend:' if percent_change_24h > 0 else ':chart_with_downwards_trend:')}", callback_data="none")]]))
 
-    # Send the price message with HTML formatting and red/green arrow emojis
-    color = "red" if percent_change_24h < 0 else "green"
+    except Exception as e:
+        message = f"{emojize(':warning:', use_aliases=True)} Error retrieving data for <b>{coin.upper()}</b>. Please check the spelling of the coin and try again."
+        client.send_message(chat_id=message.chat.id, text=message, parse_mode="HTML")
+
     client.send_message(chat_id=message.chat.id, text=message, parse_mode="HTML", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(f"{percent_change_24h_formatted} {color} {emojize(':chart_with_upwards_trend:' if percent_change_24h > 0 else ':chart_with_downwards_trend:')}", callback_data="none")]]))
 
 # Start the bot
