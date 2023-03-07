@@ -17,9 +17,9 @@ def start(client, message):
 
 
 # Function to handle the /price command
-@bot.on_message(filters.command("price"))
+@bot.on_message(filters.command("price") & filters.text)
 def price(client, message):
-    # Extract the coin name from the message
+from the message
     coin = message.text.split()[1].lower()
 
     # Get the price of the coin
@@ -45,7 +45,6 @@ def price(client, message):
     # Send the price message with HTML formatting and red/green arrow emojis
     color = "red" if percent_change_24h < 0 else "green"
     client.send_message(chat_id=message.chat.id, text=message, parse_mode="HTML", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(f"{percent_change_24h_formatted} {color} {emojize(':chart_with_upwards_trend:' if percent_change_24h > 0 else ':chart_with_downwards_trend:')}", callback_data="none")]]))
-
 
 # Start the bot
 bot.run()
