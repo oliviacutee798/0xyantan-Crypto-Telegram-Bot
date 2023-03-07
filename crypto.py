@@ -42,7 +42,7 @@ def price(bot, update):
                 message += f"🔴 {percent_change_24h:.2f}%"
         else:
             message += "N/A"
-        update.reply_text(message, parse_mode=ParseMode.HTML)
+        update.reply_text(message, parse_mode="HTML")
     else:
         update.reply_text("Sorry, I couldn't find the price of that cryptocurrency.")
 
