@@ -1,5 +1,5 @@
-import pyrogram
 import requests
+import pyrogram
 
 # Set up the bot
 bot = pyrogram.Client("my_bot", api_id=16494981, api_hash="71a3b460f5396bd5b5fe23139407c487", bot_token="5701549938:AAGZTK-B5XcAUlWvVEAM-2T924LqKf2ZJK0")
@@ -42,7 +42,7 @@ def price(bot, update):
                 message += f"🔴 {percent_change_24h:.2f}%"
         else:
             message += "N/A"
-        update.reply_text(message, parse_mode="HTML")
+        update.reply_text(message, parse_mode=ParseMode.HTML)
     else:
         update.reply_text("Sorry, I couldn't find the price of that cryptocurrency.")
 
