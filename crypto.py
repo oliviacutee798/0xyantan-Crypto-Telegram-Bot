@@ -16,7 +16,7 @@ def start(client, message):
     client.send_message(chat_id=message.chat.id, text="Hi! I'm a cryptocurrency price bot @TheQuietBot. Use the /price command followed by the name of a cryptocurrency to get its current price.Made By @TheAnonxD")
 
 
-@bot.on_message(filters.command("price") & filters.text)
+@bot.on_message(filters.command("price"))
 def price(client, message):
     coin = message.text.split()[1].lower()
 
@@ -34,12 +34,12 @@ def price(client, message):
 
         percent_change_24h_formatted = f"{percent_change_24h:.2f}%"
 
-        message = f"{emojize(':money_with_wings:', use_aliases=True)} <b>{coin.upper()}</b> ({symbol})\n\nPrice: ${price:,.2f}\n24h: {percent_change_24h_formatted} {color} {emojize(':chart_with_upwards_trend:' if percent_change_24h > 0 else ':chart_with_downwards_trend:')}"
-        client.send_message(chat_id=message.chat.id, text=message, parse_mode="HTML", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(f"{percent_change_24h_formatted} {color} {emojize(':chart_with_upwards_trend:' if percent_change_24h > 0 else ':chart_with_downwards_trend:')}", callback_data="none")]]))
+        msg = f"{emojize(':money_with_wings:', use_aliases=True)} <b>{coin.upper()}</b> ({symbol})\n\nPrice: ${price:,.2f}\n24h: {percent_change_24h_formatted} {color} {emojize(':chart_with_upwards_trend:' if percent_change_24h > 0 else ':chart_with_downwards_trend:')}"
+        client.send_message(chat_id=message.chat.id, text=msg, parse_mode="HTML", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(f"{percent_change_24h_formatted} {color} {emojize(':chart_with_upwards_trend:' if percent_change_24h > 0 else ':chart_with_downwards_trend:')}", callback_data="none")]]))
 
     except Exception as e:
-        message = f"{emojize(':warning:', use_aliases=True)} Error retrieving data for <b>{coin.upper()}</b>. Please check the spelling of the coin and try again."
-        client.send_message(chat_id=message.chat.id, text=message, parse_mode="HTML")
+        msg = f"{emojize(':warning:', use_aliases=True)} Error retrieving data for <b>{coin.upper()}</b>. Please check the spelling of the coin and try again."
+        client.send_message(chat_id=message.chat.id, text=msg, parse_mode="HTML"
 
     client.send_message(chat_id=message.chat.id, text=message, parse_mode="HTML", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(f"{percent_change_24h_formatted} {color} {emojize(':chart_with_upwards_trend:' if percent_change_24h > 0 else ':chart_with_downwards_trend:')}", callback_data="none")]]))
 
