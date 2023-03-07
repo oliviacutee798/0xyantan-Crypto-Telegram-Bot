@@ -27,7 +27,7 @@ def price(bot, update):
         logo_url = logo_data.get("logo")
     else:
         price = None
-        logo_url = https://te.legra.ph/file/c8c4f6d77cfd2fd3f8e0f.png
+        logo_url = "https://te.legra.ph/file/c8c4f6d77cfd2fd3f8e0f.png"
 
     # Respond to the user with the price and logo
     if price and logo_url:
