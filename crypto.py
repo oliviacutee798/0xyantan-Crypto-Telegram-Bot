@@ -15,7 +15,6 @@ bot = Client("my_bot", api_id, api_hash, bot_token=bot_token)
 def start(client, message):
     client.send_message(chat_id=message.chat.id, text="Hi! I'm a cryptocurrency price bot @TheQuietBot. Use the /price command followed by the name of a cryptocurrency to get its current price.Made By @TheAnonxD")
 
-
 # Function to handle the /price command
 @bot.on_message(filters.command("price") & filters.text)
 def price(client, message):
