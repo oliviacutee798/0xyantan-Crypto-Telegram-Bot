@@ -27,12 +27,12 @@ def price(bot, update):
         logo_url = logo_data.get("logo")
     else:
         price = None
-        logo_url = None
+        logo_url = https://te.legra.ph/file/c8c4f6d77cfd2fd3f8e0f.png
 
     # Respond to the user with the price and logo
     if price and logo_url:
         message = f"📈 <b>{coin}</b> is currently trading at <b>${price:.2f}</b>\n"
-        message += f'<a href="{https://te.legra.ph/file/c8c4f6d77cfd2fd3f8e0f.png}">&#8205;</a>' # Add the coin logo to the message
+        message += f'<a href="{logo_url}">&#8205;</a>' # Add the coin logo to the message
         message += "\n\n<b>24h Change:</b>\n"
         percent_change_24h = data[coin].get("quote", {}).get("USD", {}).get("percent_change_24h")
         if percent_change_24h is not None:
