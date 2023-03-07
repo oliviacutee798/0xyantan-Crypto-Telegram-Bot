@@ -55,3 +55,5 @@ def price(client, message):
     # Send the price message with HTML formatting
     client.send_message(chat_id=message.chat.id, text=message, parse_mode="HTML")
 
+    # Start the bot
+     app.run()
