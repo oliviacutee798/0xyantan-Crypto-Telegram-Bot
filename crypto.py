@@ -23,7 +23,7 @@ def price(client, message):
     try:
         response = requests.get(f"https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids={coin}")
         data = response.json()
-        price = data[0]["current_price"]
+        price = data['market_data']['current_price']['usd']
         percent_change_24h = data[0]["price_change_percentage_24h"]
         symbol = data[0]["symbol"].upper()
 
