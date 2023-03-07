@@ -8,6 +8,16 @@ api_hash = os.getenv("71a3b460f5396bd5b5fe23139407c487")
 bot_token = os.getenv("5701549938:AAGZTK-B5XcAUlWvVEAM-2T924LqKf2ZJK0")
 bot = Client("my_bot", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
 
+@bot.on_message(filters.command("start"))
+def start(client, message):
+    text = "Hi there!\n\n" \
+           "Welcome to @TheQuietBot. This bot provides real-time price updates for various cryptocurrencies.\n\n" \
+           "Here are the available commands:\n\n" \
+           "/price <coin> - Get the current price of a specific cryptocurrency\n\n" \
+           "All prices are in USD.\n\n" \
+           "Thank you for using @TheQuietBot!"
+            "Bot Made By @TheAnonxD" 
+    client.send_message(chat_id=message.chat.id, text=text)
 
 # Function to handle the /price command
 @bot.on_message(filters.command("price"))
@@ -37,7 +47,8 @@ def price(client, message):
 
         message = f"<b>{data['name']} ({data['symbol'].upper()})</b>\n" \
                   f"<a href='{data['image']}'>&#8205;</a>{price_formatted}\n" \
-                  f"{percent_change_formatted}" 𝗕𝗼𝘁 𝗠𝗮𝗱𝗲 𝗕𝘆 @TheAnonxD
+                  f"{percent_change_formatted}"
+                    "Bot Made By @TheAnonxD
 
     except (KeyError, IndexError):
         message = f"Sorry, {coin} is not a valid cryptocurrency."
