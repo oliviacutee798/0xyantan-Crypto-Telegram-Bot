@@ -64,7 +64,7 @@ def send_data(bot, update):
 bot = telegram.Bot(token='5701549938:AAGZTK-B5XcAUlWvVEAM-2T924LqKf2ZJK0')
 
 def main():
-    updater = telegram.Updater(token='5701549938:AAGZTK-B5XcAUlWvVEAM-2T924LqKf2ZJK0')
+    updater = telegram.Updater(token='YOUR_BOT_TOKEN')
     dispatcher = updater.dispatcher
     dispatcher.add_handler(telegram.ext.MessageHandler(telegram.ext.Filters.text, send_data))
     updater.start_polling()
