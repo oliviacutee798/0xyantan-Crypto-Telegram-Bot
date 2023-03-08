@@ -1,5 +1,6 @@
 import ccxt
 import matplotlib.pyplot as plt
+from datetime import datetime
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 # Set up the Telegram bot
@@ -33,7 +34,7 @@ def generate_chart(symbol):
     # Fetch the hourly OHLCV data
     ohlcv = exchange.fetch_ohlcv(symbol, timeframe='1h', limit=24)
     timestamps = [t[0] for t in ohlcv]
-    dates = [datetime.datetime.fromtimestamp(t/1000) for t in timestamps]
+    dates = [datetime.fromtimestamp(t/1000) for t in timestamps]
     closes = [t[4] for t in ohlcv]
     
     # Generate the chart
