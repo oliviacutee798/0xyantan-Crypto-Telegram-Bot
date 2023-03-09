@@ -1,53 +1,46 @@
-import ccxt
-import matplotlib.pyplot as plt
-from datetime import datetime
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from pyrogram 
+import Client
+import requests
+import filters
 
-# Set up the Telegram bot
-TOKEN = '5701549938:AAGZTK-B5XcAUlWvVEAM-2T924LqKf2ZJK0'
-updater = Updater(token=TOKEN, use_context=True)
-dispatcher = updater.dispatcher
+api_id = 16494981 # Your API ID
+api_hash = "71a3b460f5396bd5b5fe23139407c487" # Your API Hash
 
-# Define the command handler function
-def send_data(bot, update):
-    chat_id = update.message.chat_id
-    message = update.message.text
-    symbol = message.upper()
-    try:
-        exchange = ccxt.binance()
-        
-        # Fetch the ticker data
-        ticker = exchange.fetch_ticker(symbol)
-        price = ticker['last']
-        
-        # Send the data to the user
-        bot.send_message(chat_id=chat_id, text=f"{symbol} Price: {price}")
-        generate_chart(symbol)
-        bot.send_photo(chat_id=chat_id, photo=open(symbol.upper() + '_hourly_chart.png', 'rb'))
-    except:
-        bot.send_message(chat_id=chat_id, text='Invalid symbol. Please try again.')
+app = Client("my_account", api_id, api_hash)
 
-# Define the chart generator function
-def generate_chart(symbol):
-    exchange = ccxt.binance()
-    
-    # Fetch the hourly OHLCV data
-    ohlcv = exchange.fetch_ohlcv(symbol, timeframe='1h', limit=24)
-    timestamps = [t[0] for t in ohlcv]
-    dates = [datetime.fromtimestamp(t/1000) for t in timestamps]
-    closes = [t[4] for t in ohlcv]
-    
-    # Generate the chart
-    fig, ax = plt.subplots()
-    ax.plot(dates, closes)
-    ax.set_title(f'{symbol} Hourly Chart')
-    ax.set_xlabel('Date')
-    ax.set_ylabel('Price (USDT)')
-    fig.autofmt_xdate()
-    plt.savefig(f'{symbol.upper()}_hourly_chart.png')
+@app.on_message(filters.command("price", prefixes="!"))
+def send_crypto_price(client, message):
+    text = message.text.split()[1].lower()
+    price = get_crypto_price(text)
+    response = f"The current price of {text.upper()} is ${price:.6f}"
+    message.reply(response)
 
-# Set up the command handler
-dispatcher.add_handler(CommandHandler('crypto', send_data))
+def get_crypto_price(coin):
+    url = f"https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids={coin}&order=market_cap_desc&per_page=1&page=1&sparkline=false"
+    response = requests.get(url)
+    response_json = json.loads(response.text)
+    price = response_json[0]["current_price"]
+    market_cap = response_json[0]["market_cap"]
+    volume_24h = response_json[0]["total_volume"]
+    high_24h = response_json[0]["high_24h"]
+    low_24h = response_json[0]["low_24h"]
+    price_change_24h = response_json[0]["price_change_percentage_24h"]
+    buy_volume = response_json[0]["buy_volume"]
+    sell_volume = response_json[0]["sell_volume"]
+    return price, market_cap, volume_24h, high_24h, low_24h, price_change_24h, buy_volume, sell_volume
 
-# Start the bot
-updater.start_polling()
+
+@app.on_message(filters.command("price", prefixes="/"))
+def send_crypto_price(client, message):
+    text = message.text.split()[1].lower()
+    price, market_cap, volume_24h, high_24h, low_24h, price_change_24h, buy_volume, sell_volume = get_crypto_price(text)
+    response = f"*{text.upper()} Price Information:*\n\n" \
+               f"💰 Current Price: *${price:.2f}*\n" \
+               f"🌎 Market Cap: *${market_cap:,.0f}*\n" \
+               f"📈 24H High: *${high_24h:.2f}*\n" \
+               f"📉 24H Low: *${low_24h:.2f}*\n" \
+               f"📈 24H % Change: *{price_change_24h:.2f}%*\n" \
+               f"📈 24H Volume: *${volume_24h:,.0f}*\n" \
+               f"👨‍💼 Buy Volume: *{buy_volume:,.0f}*\n" \
+               f"👩‍💼 Sell Volume: *{sell_volume:,.0f}*"
+    message.reply(response, parse_mode="markdown")
