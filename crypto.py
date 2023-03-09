@@ -1,7 +1,4 @@
-from pyrogram 
-import Client
-import requests
-import filters
+from pyrogram import Client import requests import filters
 
 api_id = 16494981 # Your API ID
 api_hash = "71a3b460f5396bd5b5fe23139407c487" # Your API Hash
